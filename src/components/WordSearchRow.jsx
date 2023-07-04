@@ -36,12 +36,14 @@ const getSolutionPositions = (solutions) => {
 
     if (startX === endX) {
       // Vertical word
-      for (let y = startY; y <= endY; y++) {
+      const incrementY = startY <= endY ? 1 : -1; // Determinar el incremento en función de la dirección
+      for (let y = startY; y !== endY + incrementY; y += incrementY) {
         positions.push({ x: startX, y });
       }
     } else if (startY === endY) {
       // Horizontal word
-      for (let x = startX; x <= endX; x++) {
+      const incrementX = startX <= endX ? 1 : -1; // Determinar el incremento en función de la dirección
+      for (let x = startX; x !== endX + incrementX; x += incrementX) {
         positions.push({ x, y: startY });
       }
     } else {
@@ -65,6 +67,7 @@ const getSolutionPositions = (solutions) => {
 
   return positions;
 };
+
 
 const isPositionInSolutions = (position, solutionPositions) => {
   return solutionPositions.some((solutionPosition) => {
