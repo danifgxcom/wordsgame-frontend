@@ -9,6 +9,11 @@ const WordSearch = ({ wordSearch }) => {
     setShowSolutions(!showSolutions);
   };
 
+  const toggleHighlight = () => {
+    // Implementa la lógica para resaltar el borde de la cuadrícula en rosa aquí
+    // Puedes utilizar el estado o cualquier otra lógica necesaria
+  };
+
   return (
     <div className="word-search-container">
       <button onClick={toggleSolutions}>
@@ -23,6 +28,8 @@ const WordSearch = ({ wordSearch }) => {
               rowIndex={rowIndex}
               solutions={solutions}
               showSolutions={showSolutions}
+              toggleSolution={toggleSolutions}
+              toggleHighlight={toggleHighlight}
             />
           ))}
         </tbody>

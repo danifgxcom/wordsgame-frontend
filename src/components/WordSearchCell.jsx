@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 
-const WordSearchCell = ({ letter, isSolution, position }) => {
-  const [showPosition, setShowPosition] = useState(false);
+const WordSearchCell = ({ letter, isSolution, position, toggleHighlight }) => {
+  const [isHighlighted, setIsHighlighted] = useState(false);
 
-  const handleMouseOver = () => {
-    setShowPosition(true);
-  };
-
-  const handleMouseOut = () => {
-    setShowPosition(false);
+  const handleClick = () => {
+    setIsHighlighted(!isHighlighted);
+    toggleHighlight(position);
   };
 
   const cellStyle = {
@@ -19,6 +16,8 @@ const WordSearchCell = ({ letter, isSolution, position }) => {
     textAlign: "center",
     fontFamily: "Arial",
     position: "relative",
+    border: isHighlighted ? "4px solid #6a0dad" : "1px solid black",
+    fontWeight: isHighlighted ? "bold" : "normal",
   };
 
   const positionStyle = {
@@ -27,17 +26,13 @@ const WordSearchCell = ({ letter, isSolution, position }) => {
     right: 0,
     fontSize: "10px",
     color: "gray",
+    visibility: isHighlighted ? "visible" : "hidden",
   };
 
   return (
-    <td
-      className="word-search-cell"
-      style={cellStyle}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    >
+    <td className="word-search-cell" style={cellStyle} onClick={handleClick}>
       {letter}
-      {showPosition && <span style={positionStyle}>{`(${position.x},${position.y})`}</span>}
+      <span style={positionStyle}>{`(${position.x},${position.y})`}</span>
     </td>
   );
 };

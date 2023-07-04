@@ -1,7 +1,7 @@
 import React from "react";
 import WordSearchCell from "./WordSearchCell";
 
-const WordSearchRow = ({ row, rowIndex, solutions, showSolutions, toggleSolution }) => {
+const WordSearchRow = ({ row, rowIndex, solutions, showSolutions, toggleSolution, toggleHighlight }) => {
   const letters = row.split("");
   const solutionPositions = getSolutionPositions(solutions);
 
@@ -19,6 +19,7 @@ const WordSearchRow = ({ row, rowIndex, solutions, showSolutions, toggleSolution
             isSolution={isSolutionVisible}
             position={currentPosition}
             toggleSolution={toggleSolution}
+            toggleHighlight={toggleHighlight}
           />
         );
       })}
@@ -67,7 +68,6 @@ const getSolutionPositions = (solutions) => {
 
   return positions;
 };
-
 
 const isPositionInSolutions = (position, solutionPositions) => {
   return solutionPositions.some((solutionPosition) => {
