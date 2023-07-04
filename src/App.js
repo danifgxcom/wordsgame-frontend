@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import WordSearch from "./components/WordSearch";
+import WordList from "./components/WordList";
 
-function App() {
+const App = () => {
+  const [wordSearch, setWordSearch] = useState(null);
+
+  useEffect(() => {
+    generateWordSearch();
+  }, []);
+
+  const generateWordSearch = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/generate");
+      console.log(response.data);
+      const updatedWordSearch = { ...response.data, solutions: response.data.solutions };
+      setWordSearch(updatedWordSearch);
+    } catch (error) {
+      console.error("Error generating word search:", error);
+    }
+  }
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Word Search</h1>
+      {wordSearch ? (
+        <div>
+          <WordSearch wordSearch={wordSearch} />
+          <WordList solutions={wordSearch.solutions} />
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
-}
+};
 
 export default App;
