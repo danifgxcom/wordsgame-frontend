@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const WordSearchCell = ({ letter, isSolution, position, toggleHighlight }) => {
-  const [isHighlighted, setIsHighlighted] = useState(false);
+const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarked }) => {
+  const [isHighlighted, setIsHighlighted] = useState(isMarked);
+
+  useEffect(() => {
+    setIsHighlighted(isMarked);
+  }, [isMarked]);
 
   const handleClick = () => {
-    setIsHighlighted(!isHighlighted);
-    toggleHighlight(position);
+    if (toggleHighlight(position)) {
+      setIsHighlighted(!isHighlighted);
+    }
   };
 
   const cellStyle = {
