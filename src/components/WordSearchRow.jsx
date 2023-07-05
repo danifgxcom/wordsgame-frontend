@@ -1,5 +1,6 @@
 import React from "react";
 import WordSearchCell from "./WordSearchCell";
+import { isPositionMarked } from "./helpers";
 
 const WordSearchRow = ({
   row,
@@ -9,9 +10,17 @@ const WordSearchRow = ({
   toggleSolution,
   toggleHighlight,
   markedPositions,
+  wordFound
 }) => {
   const letters = row.split("");
   const solutionPositions = getSolutionPositions(solutions);
+  const shouldClearWord = (currentPosition) => {
+    if (wordFound) {
+      // Verificar si currentPosition está en markedPositions utilizando la función isPositionMarked
+      return isPositionMarked(currentPosition, markedPositions);
+    }
+    return false;
+  };
 
   return (
     <tr className="word-search-row">
@@ -30,12 +39,14 @@ const WordSearchRow = ({
             isMarked={isMarked}
             toggleSolution={toggleSolution}
             toggleHighlight={toggleHighlight}
+            shouldClearWord={shouldClearWord} 
           />
         );
       })}
     </tr>
   );
 };
+
 
 const getSolutionPositions = (solutions) => {
   const positions = [];
@@ -82,12 +93,6 @@ const getSolutionPositions = (solutions) => {
 const isPositionInSolutions = (position, solutionPositions) => {
   return solutionPositions.some((solutionPosition) => {
     return solutionPosition.x === position.x && solutionPosition.y === position.y;
-  });
-};
-
-const isPositionMarked = (position, markedPositions) => {
-  return markedPositions.some((markedPosition) => {
-    return markedPosition.x === position.x && markedPosition.y === position.y;
   });
 };
 

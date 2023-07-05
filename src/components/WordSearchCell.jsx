@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarked }) => {
+const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarked, shouldClearWord }) => {
   const [isHighlighted, setIsHighlighted] = useState(isMarked);
+  const [isFinal, setIsFinal] = useState(false);
 
   useEffect(() => {
     setIsHighlighted(isMarked);
   }, [isMarked]);
+
+  useEffect(() => {
+    if (shouldClearWord(position)) {
+      setIsFinal(true);
+    }
+  }, [shouldClearWord, position]);
 
   const handleClick = () => {
     if (toggleHighlight(position)) {
@@ -14,7 +21,7 @@ const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarke
   };
 
   const cellStyle = {
-    backgroundColor: isSolution ? "yellow" : "white",
+    backgroundColor: isFinal ? "lightgreen" : isSolution ? "yellow" : "white",
     width: "40px",
     height: "40px",
     padding: "4px",
@@ -22,8 +29,7 @@ const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarke
     fontFamily: "Arial",
     position: "relative",
     border: isHighlighted ? "4px solid #6a0dad" : "1px solid black",
-    fontWeight: isHighlighted ? "bold" : "normal",
-    ...(isMarked && { backgroundColor: "lightgreen" }),
+    fontWeight: isHighlighted ? "bold" : "normal"
   };
 
   const positionStyle = {
