@@ -13,4 +13,3 @@ export function isPositionContiguous(position, lastPosition) {
         markedPosition.x === position.x && markedPosition.y === position.y
     );
   }
-  

@@ -1,8 +1,5 @@
 import React from "react";
 import WordSearchCell from "./WordSearchCell";
-import { isPositionContiguous, isPositionMarked } from "./helpers";
-
-
 
 const WordSearchRow = ({
   row,
@@ -15,7 +12,6 @@ const WordSearchRow = ({
 }) => {
   const letters = row.split("");
   const solutionPositions = getSolutionPositions(solutions);
-  const isMarked = isPositionInVector(rowIndex, markedPositions);
 
   return (
     <tr className="word-search-row">
@@ -23,24 +19,23 @@ const WordSearchRow = ({
         const currentPosition = { x: colIndex, y: rowIndex };
         const isSolution = isPositionInSolutions(currentPosition, solutionPositions);
         const isSolutionVisible = isSolution && showSolutions;
-        const position = { x: colIndex, y: rowIndex };
-        const isCellMarked = isPositionMarked(position, markedPositions);
+        const isMarked = isPositionMarked(currentPosition, markedPositions);
 
         return (
           <WordSearchCell
             key={colIndex}
             letter={letter}
             isSolution={isSolutionVisible}
-            position={position}
+            position={currentPosition}
+            isMarked={isMarked}
+            toggleSolution={toggleSolution}
             toggleHighlight={toggleHighlight}
-            isMarked={isCellMarked}
           />
         );
       })}
     </tr>
   );
 };
-
 
 const getSolutionPositions = (solutions) => {
   const positions = [];
@@ -90,8 +85,10 @@ const isPositionInSolutions = (position, solutionPositions) => {
   });
 };
 
-const isPositionInVector = (rowIndex, markedPositions) => {
-  return markedPositions[rowIndex] !== undefined;
+const isPositionMarked = (position, markedPositions) => {
+  return markedPositions.some((markedPosition) => {
+    return markedPosition.x === position.x && markedPosition.y === position.y;
+  });
 };
 
 export default WordSearchRow;

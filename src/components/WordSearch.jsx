@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import WordSearchRow from "./WordSearchRow";
 import { isPositionContiguous, isPositionMarked } from "./helpers";
 
-
 const sortAndRemoveDuplicates = (positions) => {
   const uniquePositions = positions.reduce((unique, pos) => {
     if (!unique.some((p) => p.x === pos.x && p.y === pos.y)) {
@@ -25,12 +24,21 @@ const WordSearch = ({ wordSearch }) => {
   const { matrix, solutions } = wordSearch;
   const [showSolutions, setShowSolutions] = useState(true);
   const [markedPositions, setMarkedPositions] = useState([]);
+  const [currentWord, setCurrentWord] = useState("");
+  const [wordFound, setWordFound] = useState(false);
 
   const toggleSolutions = () => {
     setShowSolutions(!showSolutions);
   };
 
   const toggleHighlight = (position) => {
+    if (wordFound) {
+      setMarkedPositions([]);
+      setCurrentWord("");
+      setWordFound(false);
+      return;
+    }
+
     const isPositionMarked = markedPositions.some(
       (markedPosition) =>
         markedPosition.x === position.x && markedPosition.y === position.y
@@ -41,14 +49,12 @@ const WordSearch = ({ wordSearch }) => {
       isAdjacentToLastPosition(position, markedPositions[markedPositions.length - 1]);
 
     if (isPositionMarked) {
-      // Si la posición ya está marcada, se remueve del vector
       const filteredPositions = markedPositions.filter(
         (markedPosition) =>
           markedPosition.x !== position.x || markedPosition.y !== position.y
       );
       setMarkedPositions(filteredPositions);
     } else if (isPositionContiguous) {
-      // La posición actual es contigua, se agrega al vector de posiciones marcadas
       setMarkedPositions([...markedPositions, position]);
     }
   };
@@ -62,8 +68,16 @@ const WordSearch = ({ wordSearch }) => {
 
   useEffect(() => {
     const sortedAndUniquePositions = sortAndRemoveDuplicates(markedPositions);
-    console.log("Marked Positions:", sortedAndUniquePositions);
-  }, [markedPositions]);
+    const word = sortedAndUniquePositions
+      .map((position) => matrix[position.y][position.x])
+      .join("");
+    setCurrentWord(word);
+
+    if (solutions.some((solution) => solution.word === word)) {
+      console.log("WORD FOUND!");
+      setWordFound(true);
+    }
+  }, [markedPositions, matrix, solutions]);
 
   return (
     <div className="word-search-container">
@@ -84,6 +98,8 @@ const WordSearch = ({ wordSearch }) => {
               markedPositions={markedPositions}
               isPositionContiguous={isPositionContiguous}
               isPositionMarked={isPositionMarked}
+              currentWord={currentWord}
+              wordFound={wordFound}
             />
           ))}
         </tbody>

@@ -23,6 +23,7 @@ const WordSearchCell = ({ letter, isSolution, position, toggleHighlight, isMarke
     position: "relative",
     border: isHighlighted ? "4px solid #6a0dad" : "1px solid black",
     fontWeight: isHighlighted ? "bold" : "normal",
+    ...(isMarked && { backgroundColor: "lightgreen" }),
   };
 
   const positionStyle = {
