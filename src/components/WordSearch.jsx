@@ -20,12 +20,13 @@ const sortAndRemoveDuplicates = (positions) => {
   return sortedPositions;
 };
 
-const WordSearch = ({ wordSearch }) => {
+const WordSearch = ({ wordSearch, setFoundWords }) => {
   const { matrix, solutions } = wordSearch;
   const [showSolutions, setShowSolutions] = useState(true);
   const [markedPositions, setMarkedPositions] = useState([]);
   const [currentWord, setCurrentWord] = useState("");
   const [wordFound, setWordFound] = useState(false);
+  const [updatedSolutions, setUpdatedSolutions] = useState(solutions);
 
   const toggleSolutions = () => {
     setShowSolutions(!showSolutions);
@@ -73,11 +74,23 @@ const WordSearch = ({ wordSearch }) => {
       .join("");
     setCurrentWord(word);
 
-    if (solutions.some((solution) => solution.word === word)) {
+    const foundSolution = updatedSolutions.find((solution) => solution.word === word);
+
+    if (foundSolution) {
       console.log("WORD FOUND!");
       setWordFound(true);
+
+      // Eliminar la palabra encontrada de la lista de soluciones
+      const filteredSolutions = updatedSolutions.filter(
+        (solution) => solution.word !== word
+      );
+      setUpdatedSolutions(filteredSolutions);
+
+      setFoundWords((prevFoundWords) => [...prevFoundWords, foundSolution.word]);
+
     }
-  }, [markedPositions, matrix, solutions]);
+    
+  }, [markedPositions, matrix, updatedSolutions, setFoundWords]);
 
   return (
     <div className="word-search-container">

@@ -5,6 +5,7 @@ import WordList from "./components/WordList";
 
 const App = () => {
   const [wordSearch, setWordSearch] = useState(null);
+  const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
     generateWordSearch();
@@ -13,7 +14,6 @@ const App = () => {
   const generateWordSearch = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/generate");
-      console.log(response.data);
       const updatedWordSearch = { ...response.data, solutions: response.data.solutions };
       setWordSearch(updatedWordSearch);
     } catch (error) {
@@ -26,11 +26,11 @@ const App = () => {
     <div className="App">
       <h1>Word Search</h1>
       {wordSearch ? (
-        <div>
-          <WordSearch wordSearch={wordSearch} />
-          <WordList solutions={wordSearch.solutions} />
-        </div>
-      ) : (
+  <div>
+    <WordSearch wordSearch={wordSearch} foundWords={foundWords} setFoundWords={setFoundWords} />
+    <WordList solutions={wordSearch.solutions} foundWords={foundWords} />
+  </div>
+) : (
         <p>Loading...</p>
       )}
     </div>
