@@ -39,14 +39,13 @@ const WordSearchRow = ({
             isMarked={isMarked}
             toggleSolution={toggleSolution}
             toggleHighlight={toggleHighlight}
-            shouldClearWord={shouldClearWord} 
+            shouldClearWord={shouldClearWord}
           />
         );
       })}
     </tr>
   );
 };
-
 
 const getSolutionPositions = (solutions) => {
   const positions = [];
@@ -58,32 +57,28 @@ const getSolutionPositions = (solutions) => {
 
     if (startX === endX) {
       // Vertical word
-      const incrementY = startY <= endY ? 1 : -1; // Determinar el incremento en función de la dirección
+      const incrementY = startY <= endY ? 1 : -1;
       for (let y = startY; y !== endY + incrementY; y += incrementY) {
         positions.push({ x: startX, y });
       }
     } else if (startY === endY) {
       // Horizontal word
-      const incrementX = startX <= endX ? 1 : -1; // Determinar el incremento en función de la dirección
+      const incrementX = startX <= endX ? 1 : -1;
       for (let x = startX; x !== endX + incrementX; x += incrementX) {
         positions.push({ x, y: startY });
       }
-    } else {
+    } else if (Math.abs(endY - startY) === Math.abs(endX - startX)) {
       // Diagonal word
-      const deltaX = endX - startX;
-      const deltaY = endY - startY;
-      const incrementX = deltaX > 0 ? 1 : -1;
-      const incrementY = deltaY > 0 ? 1 : -1;
+      const incrementX = startX <= endX ? 1 : -1;
+      const incrementY = startY <= endY ? 1 : -1;
       let x = startX;
       let y = startY;
 
-      while (x !== endX || y !== endY) {
+      while (x !== endX + incrementX && y !== endY + incrementY) {
         positions.push({ x, y });
         x += incrementX;
         y += incrementY;
       }
-
-      positions.push({ x: endX, y: endY });
     }
   });
 

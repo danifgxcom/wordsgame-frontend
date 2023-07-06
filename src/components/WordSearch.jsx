@@ -22,7 +22,7 @@ const sortAndRemoveDuplicates = (positions) => {
 
 const WordSearch = ({ wordSearch, setFoundWords }) => {
   const { matrix, solutions } = wordSearch;
-  const [showSolutions, setShowSolutions] = useState(true);
+  const [showSolutions, setShowSolutions] = useState(false);
   const [markedPositions, setMarkedPositions] = useState([]);
   const [currentWord, setCurrentWord] = useState("");
   const [wordFound, setWordFound] = useState(false);
@@ -74,7 +74,13 @@ const WordSearch = ({ wordSearch, setFoundWords }) => {
       .join("");
     setCurrentWord(word);
 
-    const foundSolution = updatedSolutions.find((solution) => solution.word === word);
+    const isSameOrReverse = (word1, word2) => {
+      return word1 === word2 || word1 === word2.split("").reverse().join("");
+    };
+    
+    const foundSolution = updatedSolutions.find((solution) =>
+      isSameOrReverse(word, solution.word)
+    );
 
     if (foundSolution) {
       console.log("WORD FOUND!");
@@ -92,6 +98,12 @@ const WordSearch = ({ wordSearch, setFoundWords }) => {
     
   }, [markedPositions, matrix, updatedSolutions, setFoundWords]);
 
+  useEffect(() => {
+    // Verificar si se han encontrado todas las palabras
+    if (updatedSolutions.length === 0) {
+      console.log("COMPLETED!");
+    }
+  }, [updatedSolutions]);
   return (
     <div className="word-search-container">
       <button onClick={toggleSolutions}>
